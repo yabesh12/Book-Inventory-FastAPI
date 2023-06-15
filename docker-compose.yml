@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:14.0
+    restart: always
+    environment:
+      - POSTGRES_USER=book_inventoryUser
+      - POSTGRES_PASSWORD=book_inventoryPassword
+      - POSTGRES_DB=book_inventory
+    volumes:
+      - book_inventory_db_data:/var/lib/postgresql/data
+    networks:
+      - book_inventory_backend_tier
+  redis:
+    image: redis:latest
+    restart: always
+    networks:
+      - book_inventory_backend_tier
+  book_inventory:
+    build: .
+    restart: always
+    command: uvicorn main:app --host 0.0.0.0
+    env_file: .env
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    networks:
+      - book_inventory_backend_tier
+
+volumes:
+  book_inventory_db_data:
+    driver: local
+  static_volume:
+    driver: local
+
+
+networks:
+  book_inventory_backend_tier:
+    driver: bridge
