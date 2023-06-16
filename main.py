@@ -2,8 +2,6 @@ from fastapi import FastAPI
 
 from api.account import account_api_endpoints
 
-# Dependency: Get DB Session
-
 
 # FastAPI App
 from api.book import book_api_endpoints

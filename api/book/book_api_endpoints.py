@@ -18,6 +18,12 @@ router = APIRouter()
 
 @router.post("/api/book", response_model=None)
 async def create_book(book: BookCreate, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """
+    :param book: book data in request body
+    :param current_user: current requested user
+    :raises: if user is not admin
+    :return:
+    """
     if not current_user.is_admin:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
