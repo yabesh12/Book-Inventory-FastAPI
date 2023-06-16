@@ -15,3 +15,12 @@
 
 ### Build and run the Project
 ``docker-compose up --build``
+
+
+
+### Generate migrations
+``alembic revision --autogenerate -m "description about migration"``
+
+
+### Apply migrations on Database schema
+``alembic upgrade head``
