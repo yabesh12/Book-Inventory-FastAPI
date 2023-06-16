@@ -1,0 +1,456 @@
+{
+	"info": {
+		"_postman_id": "c21806b6-f289-4435-8ef1-b32f082af294",
+		"name": "Book-Inventory-FastAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22702175"
+	},
+	"item": [
+		{
+			"name": "Account Module",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"new user\",\n    \"email\":\"yabeshsam@gmail.com\",\n    \"password\":\"yabesh\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/user/register",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"yabeshsam@gmail.com\",\n    \"password\":\"yabesh\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/user/login",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login as Admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"admin@gmail.com\",\n    \"password\":\"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/user/login",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Users (admin only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjUsImV4cCI6MTY4Njg2MTk5MH0.afRxUD45qFwDAGLr_CU2NLPEPz_Gx31_1UtN__kPjF0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/users",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Book Module",
+			"item": [
+				{
+					"name": "Create Book (admin only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTY4Njg2MzMzOH0.PywKW_hQmKd-IFDqw5zQ4P9y959V87lbhlPZRCKNjjQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\":\"test book\",\n    \"description\":\"test description\",\n    \"author\":\"test author\",\n    \"count\":10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/book",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"book"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Books",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTY4Njg2MzMzOH0.PywKW_hQmKd-IFDqw5zQ4P9y959V87lbhlPZRCKNjjQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/books",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Books (Pagination)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjUsImV4cCI6MTY4Njg2MTk5MH0.afRxUD45qFwDAGLr_CU2NLPEPz_Gx31_1UtN__kPjF0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/books/?skip=0&limit=7",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"books",
+								""
+							],
+							"query": [
+								{
+									"key": "skip",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get single Book",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImV4cCI6MTY4Njg2MjEzOH0.jpSEKsaWLYmRYo8o7o9RvTtd8FewoDmtTdFfmG4fyII",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/book/2",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"book",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update single Book (admin only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjUsImV4cCI6MTY4Njg2MTk5MH0.afRxUD45qFwDAGLr_CU2NLPEPz_Gx31_1UtN__kPjF0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"author\": \"updated  author\",\n    \"title\": \"updated book\",\n    \"description\": \"updated description\",\n    \"count\":50\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/book/2",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"book",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete single book (admin only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjUsImV4cCI6MTY4Njg2MTk5MH0.afRxUD45qFwDAGLr_CU2NLPEPz_Gx31_1UtN__kPjF0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/book/2",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"book",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Borrow Book",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImV4cCI6MTY4Njg2MzI4Nn0.jAr5SW10pF_w2M5xxcN2yACZaC8PreimD-ts9m33p_A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/book/3/borrow",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"book",
+								"3",
+								"borrow"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Return Book",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImV4cCI6MTY4Njg2MzI4Nn0.jAr5SW10pF_w2M5xxcN2yACZaC8PreimD-ts9m33p_A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/book/1/return",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"book",
+								"1",
+								"return"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Books Borrowed by user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImV4cCI6MTY4Njg2MzI4Nn0.jAr5SW10pF_w2M5xxcN2yACZaC8PreimD-ts9m33p_A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/user/book",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"book"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve User/Book history (admin only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTY4Njg2MzMzOH0.PywKW_hQmKd-IFDqw5zQ4P9y959V87lbhlPZRCKNjjQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/history/?action_type=BORROW",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"history",
+								""
+							],
+							"query": [
+								{
+									"key": "action_type",
+									"value": "BORROW"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
