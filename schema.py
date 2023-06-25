@@ -2,6 +2,8 @@ from pydantic import BaseModel
 from pydantic.class_validators import Optional
 from datetime import date
 
+from enums import RatingEnum
+
 
 class UserCreate(BaseModel):
     """
@@ -54,7 +56,7 @@ class BookCreate(BaseModel):
     description: str
     author: str
     count: int
-
+    category_id:int
 
 class BookOut(BaseModel):
     """
@@ -76,6 +78,7 @@ class BookUpdate(BaseModel):
     description: Optional[str]
     author: Optional[str]
     count: Optional[int]
+    category_id:int
 
 
 class UserBookHistorySchema(BaseModel):
@@ -90,3 +93,49 @@ class UserBookHistorySchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+# Category Schemas
+class CategoryBase(BaseModel):
+    title: str
+    description: str
+
+
+class CategoryCreate(CategoryBase):
+    pass
+
+
+class CategoryRead(CategoryBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+
+class CategoryUpdate(BaseModel):
+    title: Optional[str]
+    description: Optional[str]
+
+
+# Book Schemas
+class BookBase(BaseModel):
+    title: str
+    description: str
+    author: str
+    count: int
+
+
+class BookRead(BookBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+
+# Rating Schema
+class RatingCreate(BaseModel):
+    rating: RatingEnum
+
+
+# User Activation Schema
+class UserActivate(BaseModel):
+    is_active: bool

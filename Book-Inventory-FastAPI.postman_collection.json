@@ -120,6 +120,45 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Activate/Deactivate users (Admin only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTY4NzYyMDUzN30.5mUCJPMpLeMHCQIC6uvnMImg5DApFAhq67fgf6PUvuc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\":1,\n    \"is_active\":\"False\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/user/1/activate",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"1",
+								"activate"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -134,7 +173,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTY4Njg2MzMzOH0.PywKW_hQmKd-IFDqw5zQ4P9y959V87lbhlPZRCKNjjQ",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTY4NzcwMDIxNX0.eTQbmiXKq8m3kOY96zwmPVLzOWpt9BlJZHl33872OcA",
 									"type": "string"
 								}
 							]
@@ -143,7 +182,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\":\"test book\",\n    \"description\":\"test description\",\n    \"author\":\"test author\",\n    \"count\":10\n}",
+							"raw": "{\n    \"title\":\"test book\",\n    \"description\":\"test description\",\n    \"author\":\"test author\",\n    \"count\":10,\n    \"category_id\":2\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -171,7 +210,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTY4Njg2MzMzOH0.PywKW_hQmKd-IFDqw5zQ4P9y959V87lbhlPZRCKNjjQ",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTY4NzcwMzk2N30.6AgRgdtFlnvOciZbBGrGfrCxJj5ypDmURfhEDSCqrng",
 									"type": "string"
 								}
 							]
@@ -179,13 +218,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseurl}}/api/books",
+							"raw": "{{baseurl}}/api/all-books",
 							"host": [
 								"{{baseurl}}"
 							],
 							"path": [
 								"api",
-								"books"
+								"all-books"
 							]
 						}
 					},
@@ -199,7 +238,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjUsImV4cCI6MTY4Njg2MTk5MH0.afRxUD45qFwDAGLr_CU2NLPEPz_Gx31_1UtN__kPjF0",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTY4NzcwMzk2N30.6AgRgdtFlnvOciZbBGrGfrCxJj5ypDmURfhEDSCqrng",
 									"type": "string"
 								}
 							]
@@ -238,7 +277,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImV4cCI6MTY4Njg2MjEzOH0.jpSEKsaWLYmRYo8o7o9RvTtd8FewoDmtTdFfmG4fyII",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImV4cCI6MTY4NzY5OTczNX0.Ni7KcinJBejdpDUWIo0fqViaAXJSuP9dPWW_ZDmD0s0",
 									"type": "string"
 								}
 							]
@@ -246,14 +285,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseurl}}/api/book/2",
+							"raw": "{{baseurl}}/api/book/8",
 							"host": [
 								"{{baseurl}}"
 							],
 							"path": [
 								"api",
 								"book",
-								"2"
+								"8"
 							]
 						}
 					},
@@ -267,7 +306,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjUsImV4cCI6MTY4Njg2MTk5MH0.afRxUD45qFwDAGLr_CU2NLPEPz_Gx31_1UtN__kPjF0",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTY4NzcwMzk2N30.6AgRgdtFlnvOciZbBGrGfrCxJj5ypDmURfhEDSCqrng",
 									"type": "string"
 								}
 							]
@@ -276,7 +315,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"author\": \"updated  author\",\n    \"title\": \"updated book\",\n    \"description\": \"updated description\",\n    \"count\":50\n}",
+							"raw": "{\n    \"author\": \"new author\",\n    \"title\": \"new book\",\n    \"description\": \"new description\",\n    \"count\":50,\n    \"category_id\":3\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -334,7 +373,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImV4cCI6MTY4Njg2MzI4Nn0.jAr5SW10pF_w2M5xxcN2yACZaC8PreimD-ts9m33p_A",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImV4cCI6MTY4NzYxNDA0Nn0.Ej98IgnWX34F1_ThebE8bo5d7H3LqjPmbG8Y649t-b0",
 									"type": "string"
 								}
 							]
@@ -342,14 +381,14 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{baseurl}}/api/book/3/borrow",
+							"raw": "{{baseurl}}/api/book/1/borrow",
 							"host": [
 								"{{baseurl}}"
 							],
 							"path": [
 								"api",
 								"book",
-								"3",
+								"1",
 								"borrow"
 							]
 						}
@@ -444,6 +483,279 @@
 								{
 									"key": "action_type",
 									"value": "BORROW"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Category (Admin only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTY4NzYxMjIwMH0.Wx81IAKkryrlYF-brny5fyXR7MNGm8R5aUM3zovFZmM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\":\"new category\",\n    \"description\":\"category description\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/category",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Categories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTY4NzcwMTc1Mn0.fVbwdi8BlKkFWwk3-NPZ9B9A_Vl-ng8V4XFIdgn5cWk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/categories",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImV4cCI6MTY4NzYxMjkxOX0.gAlEPmt2mfI4Kzn1pUGXprCVuHJ00c13BIERNJ8-0cQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/category/3",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"category",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Category (Admin only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTY4NzYxMjIwMH0.Wx81IAKkryrlYF-brny5fyXR7MNGm8R5aUM3zovFZmM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\":\"updated category\",\n    \"description\":\"updated description\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/category/1",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"category",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category (Admin only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTY4NzYxMjIwMH0.Wx81IAKkryrlYF-brny5fyXR7MNGm8R5aUM3zovFZmM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/category/1",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"category",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Category Search (return books)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTY4NzYxMjIwMH0.Wx81IAKkryrlYF-brny5fyXR7MNGm8R5aUM3zovFZmM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/category/2/books",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"category",
+								"2",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Book Rating (only borrowed user)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImV4cCI6MTY4NzYxOTk1NH0.fDJXQAAsaoPsOYTzqd59h3oD8c4P1g0JATc-Hu1YTQ8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"book_id\":2,\n    \"rating\":3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/book/1/rating",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"book",
+								"1",
+								"rating"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Books (by author, title, category)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTY4NzcwMzk2N30.6AgRgdtFlnvOciZbBGrGfrCxJj5ypDmURfhEDSCqrng",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/search-books/?author=author&title=updated&category_id=2",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"search-books",
+								""
+							],
+							"query": [
+								{
+									"key": "author",
+									"value": "author"
+								},
+								{
+									"key": "title",
+									"value": "updated"
+								},
+								{
+									"key": "category_id",
+									"value": "2"
 								}
 							]
 						}

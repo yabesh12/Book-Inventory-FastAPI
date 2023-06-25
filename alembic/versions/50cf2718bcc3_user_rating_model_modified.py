@@ -1,8 +1,8 @@
-"""Description of changes
+"""user rating model modified
 
-Revision ID: e937f788eb91
-Revises: e2b4ec1f870f
-Create Date: 2023-06-15 15:55:43.696544
+Revision ID: 50cf2718bcc3
+Revises: b6297fbea00a
+Create Date: 2023-06-24 12:36:33.748481
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e937f788eb91'
-down_revision = 'e2b4ec1f870f'
+revision = '50cf2718bcc3'
+down_revision = 'b6297fbea00a'
 branch_labels = None
 depends_on = None
 

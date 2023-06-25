@@ -1,14 +1,18 @@
 from datetime import datetime, date
+from typing import List
 
 from fastapi import Depends, HTTPException, status
 from pydantic.class_validators import Optional
-from sqlalchemy.orm import Session
+from sqlalchemy import select
+from sqlalchemy.orm import Session, joinedload
 from starlette.responses import JSONResponse
 
 from api.account.utils import get_current_user
-from enums import ActionType
-from models import User, Book, UserBookHistory
-from schema import BookCreate, BookUpdate
+from api.book.utils import is_book_borrowed_by_user
+from enums import ActionType, RatingEnum
+from models import User, Book, UserBookHistory, Category, UserBookRating
+from schema import BookCreate, BookUpdate, CategoryCreate, CategoryRead, CategoryUpdate, BookRead, RatingCreate, \
+    UserActivate
 from settings import get_db
 from fastapi import APIRouter
 
@@ -29,11 +33,23 @@ async def create_book(book: BookCreate, current_user: User = Depends(get_current
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You are not authorized! ADMIN can only access",
         )
-    db_book = Book(title=book.title, description=book.description, author=book.author, count=book.count)
+
+    # Extract the category_id from the book_data
+    category_id = book.category_id
+
+    # Query the category with the provided category_id
+    category = db.query(Category).get(category_id)
+
+    if not category:
+        # Handle the case where the category doesn't exist
+        return {"status": "error", "message": "Category not found"}
+
+    db_book = Book(title=book.title, description=book.description, author=book.author, count=book.count,
+                   categories=[category])
     db.add(db_book)
     db.commit()
     db.refresh(db_book)
-    return db_book
+    return {"status": "OK", "message": "Book created successfully", "Book": db_book}
 
 
 @router.get("/api/books", response_model=None)
@@ -69,8 +85,9 @@ async def get_all_books(current_user: User = Depends(get_current_user), db: Sess
             detail="You are not Authorized to view books!",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    books = db.query(Book).all()
-    return books
+    # return books along with their category instances
+    books = db.query(Book).options(joinedload(Book.categories)).all()
+    return {"books": books}
 
 
 @router.get("/api/book/{book_id}", response_model=None)
@@ -86,7 +103,8 @@ async def get_book(book_id: int, current_user: User = Depends(get_current_user),
             detail="You are not Authorized to view book!",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    book = db.query(Book).filter(Book.id == book_id).first()
+    # book along with its category
+    book = db.query(Book).filter(Book.id == book_id).options(joinedload(Book.categories)).first()
     if not book:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
     return book
@@ -106,13 +124,20 @@ async def update_book(book_id: int, book_update: BookUpdate, current_user: User 
             detail="You are not authorized! ADMIN can only access",
         )
     book = db.query(Book).filter(Book.id == book_id).first()
+    # find book
     if not book:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
+    # find category
+    category = db.query(Category).filter(Category.id == book_update.category_id).first()
+    if not category:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Category not found")
+    # update dict
     for key, value in book_update.dict(exclude_unset=True).items():
         setattr(book, key, value)
+    book.categories = [category]  # Update the book's category
     db.commit()
     db.refresh(book)
-    return book
+    return {"Status": "OK", "message": "Book updated successfully", "Book": book}
 
 
 @router.delete("/api/book/{book_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -178,7 +203,7 @@ async def return_book(book_id: int, current_user: User = Depends(get_current_use
     if not history:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Book is not borrowed by the user")
     history.returned_date = datetime.utcnow()
-    history.action=ActionType.RETURN
+    history.action = ActionType.RETURN
     book.count += 1
     db.commit()
 
@@ -242,3 +267,259 @@ async def retrieve_history(
 
     book_history = query.all()
     return book_history
+
+
+@router.post("/api/category", response_model=None)
+def create_category(
+        category: CategoryCreate,
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user),
+):
+    """
+    :param category: category data
+    :param current_user: requested user
+    :raises: if user not admin
+    :return: category data with success message
+    """
+    if not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="Only admin can create category")
+
+    new_category = Category(title=category.title, description=category.description)
+    db.add(new_category)
+    db.commit()
+    db.refresh(new_category)
+    return {"Status": "OK", "message": "The category successfully created",
+            "Category": new_category}
+
+
+@router.get("/api/categories", response_model=List[CategoryRead])
+def read_categories(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """
+    :current_user: requested user
+    :raises: if user not authenticated
+    :return: return all categories
+    """
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You are not Authorized to view categories!",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    categories = db.query(Category).all()
+    return categories
+
+
+@router.get("/api/category/{category_id}", response_model=CategoryRead)
+def get_category(category_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """
+    :current_user: requested user
+    :raises: if user not authenticated
+    :return: return all categories
+    """
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You are not Authorized to view category!",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    category = db.query(Category).filter(Category.id == category_id).first()
+    if not category:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Category not Exist")
+    return category
+
+
+@router.put("/api/category/{category_id}", response_model=CategoryRead)
+def update_category(
+        category_id: int,
+        category: CategoryUpdate,
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user),
+):
+    """
+    :param category_id: int
+    :param category: response schema
+    :param current_user: requested user
+    :raises: if user not admin or not authenticated
+    :return: updated category instance
+    """
+    if not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="Only admin can update category")
+
+    existing_category = db.query(Category).get(category_id)
+    if not existing_category:
+        raise HTTPException(status_code=404, detail="Category not Exist")
+
+    existing_category.title = category.title
+    existing_category.description = category.description
+    db.commit()
+    db.refresh(existing_category)
+    return existing_category
+
+
+@router.delete("/api/category/{category_id}")
+def delete_category(
+        category_id: int,
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user),
+):
+    """
+    :param category_id: int
+    :param current_user: requested user
+    :raises: if user not admin or not authenticated
+    :return: success message
+    """
+    if not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="Only admin can delete category")
+
+    category = db.query(Category).get(category_id)
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not Exist")
+
+    db.delete(category)
+    db.commit()
+    return {"message": "Category deleted successfully"}
+
+
+# Category search to get all books related to a category
+@router.get("/api/category/{category_id}/books", response_model=List[BookRead])
+def get_books_by_category(category_id: int, db: Session = Depends(get_db),
+                          current_user: User = Depends(get_current_user)):
+    """
+    :param category_id: int
+    :param current_user: requested user
+    :raises: if user is not authenticated
+    :return: books related with the category
+    """
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You are not Authorized to view books!",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    category = db.query(Category).get(category_id)
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not exist")
+
+    books = category.books
+    return books
+
+
+# Book rating by borrowed user
+@router.post("/api/book/{book_id}/rating", response_model=None)
+def rate_book(
+        book_id: int,
+        rating: RatingCreate,
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user),
+):
+    """
+    :param book_id: int
+    :param rating: int
+    :param current_user: requested user
+    :raieses: if user is not authenticated
+    :return: success response with book data
+    """
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You are not Authorized to view books!",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    print(rating.rating)
+    print(RatingEnum)
+    if rating.rating not in RatingEnum:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Invalid rating value. Allowed values: [1, 2, 3, 4, 5]",
+        )
+
+    book = db.query(Book).get(book_id)
+    if not book:
+        raise HTTPException(status_code=404, detail="Book not found")
+
+    if not is_book_borrowed_by_user(book_id, current_user.id, db):
+        raise HTTPException(
+            status_code=403, detail="Only borrowed users can rate books"
+        )
+    try:
+        rating_value = RatingEnum(rating.rating)  # Convert the rating to the enum value
+        print(f"RATING VALUE ======================================== {rating_value}")
+        print(f"RATING VALUE ======================================== {rating_value.name}")
+        print(f"RATING VALUE ======================================== {rating_value.value}")
+
+        new_rating = UserBookRating(
+            user_id=current_user.id, book_id=book_id, rating=rating_value.name
+        )
+        db.add(new_rating)
+        db.commit()
+        db.refresh(new_rating)
+    except ValueError:
+        raise HTTPException(
+            status_code=422,
+            detail="Invalid rating value provided",
+        )
+    except Exception as e:
+        raise e
+    return {
+        "id": new_rating.id,
+        "book_id": new_rating.book_id,
+        "book_name": new_rating.book.title,
+        "user_id": new_rating.user_id,
+        "user_name": new_rating.user.name,
+        "rating": new_rating.rating.name,
+    }
+
+
+# Activate/Deactivate user (admin only)
+@router.put("/api/user/{user_id}/activate", response_model=None)
+def activate_user(
+        user_id: int,
+        user_activate: UserActivate,
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user),
+):
+    """
+    :param user_id: user Id
+    :param current_user: requested user
+    :raises: if user is not authenticated or not an admin user
+    :return: success response with user data
+    """
+    if not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="Only admin can activate/deactivate users")
+
+    user = db.query(User).get(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    user.is_active = user_activate.is_active
+    db.commit()
+    db.refresh(user)
+    if user_activate.is_active:
+        msg = f"User - {user.name} activated successfully"
+    else:
+        msg = f"User- {user.name} Deactivated successfully"
+    return {"Status": "OK", "message": msg, "User": user}
+
+
+@router.get("/api/search-books", response_model=List[BookRead])
+async def search_books(title: Optional[str] = None, author: Optional[str] = None, category_id: Optional[int] = None,
+                       db: Session = Depends(get_db), current_user: User = Depends(get_current_user),
+                       ):
+    """
+    Search books by title, author, and/or category.
+    """
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You are not Authorized to view books!",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    query = db.query(Book)
+    if title:
+        query = query.filter(Book.title.ilike(f"%{title}%"))
+    if author:
+        query = query.filter(Book.author.ilike(f"%{author}%"))
+    if category_id:
+        query = query.join(Book.categories).filter(Category.id == category_id)
+    books = query.all()
+    return books

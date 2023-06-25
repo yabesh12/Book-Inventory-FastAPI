@@ -1,0 +1,4 @@
+
+1. category + category search -
+2. book rating - only borrowed user can do
+3. activate user and deactivate user - only admin can do
